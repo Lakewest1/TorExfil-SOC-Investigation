@@ -1,8 +1,8 @@
 ## SOC Detection Engineering Portfolio Project
 
-**Target IP:** 185.220.101.34 — Known Malicious Tor Exit Node  
+**Target IP:** 185.220.101.34 - Known Malicious Tor Exit Node  
 **Author:** Musa Olalekan | Cloud Security Analyst & Detection Engineer  
-**Framework:** NIST SP 800-61 — All 7 Phases  
+**Framework:** NIST SP 800-61 - All 7 Phases  
 **SIEM:** Microsoft Sentinel (Azure Lab Environment)  
 **OSINT Tools:** VirusTotal · Shodan · IPinfo · ViewDNS · SecurityTrails · Censys  
 
