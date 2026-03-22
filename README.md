@@ -1,3 +1,5 @@
+# Tor Exit Node Exfiltration Investigation
+
 ## SOC Detection Engineering Portfolio Project
 
 **Target IP:** 185.220.101.34 - Known Malicious Tor Exit Node  
@@ -16,7 +18,7 @@ This project demonstrates a complete SOC investigation workflow from initial ale
 
 | Component | Status | Detail |
 |-----------|--------|--------|
-| Target IP | **REAL** | 185.220.101.34 — documented malicious Tor exit node |
+| Target IP | **REAL** | 185.220.101.34 - documented malicious Tor exit node |
 | All 8 OSINT Screenshots | **REAL** | Captured live during investigation |
 | Attack Timeline | **REAL** | Actual investigation sequence with timestamps |
 | KQL Detection Queries | **REAL** | Production-ready, tested in Sentinel lab |
@@ -30,13 +32,13 @@ This project demonstrates a complete SOC investigation workflow from initial ale
 **Response Time:** 1 hour 45 minutes (02:00 AM alert → 03:45 AM rule deployed)
 
 **NIST SP 800-61 Lifecycle:**
-- ✅ Preparation — OSINT toolkit assembled
-- ✅ Identification — 6-tool threat profile built
-- ✅ Analysis — Deep service fingerprinting, evasion confirmed
-- ✅ Containment — /24 subnet block, host isolation
-- ✅ Eradication — Memory image, credential reset, persistence sweep
-- ✅ Recovery — Clean reimage, traffic audit
-- ✅ Lessons Learned — 4 gaps → 4 fixes → KQL rule deployed
+- ✅ Preparation - OSINT toolkit assembled
+- ✅ Identification - 6-tool threat profile built
+- ✅ Analysis - Deep service fingerprinting, evasion confirmed
+- ✅ Containment - /24 subnet block, host isolation
+- ✅ Eradication - Memory image, credential reset, persistence sweep
+- ✅ Recovery - Clean reimage, traffic audit
+- ✅ Lessons Learned - 4 gaps → 4 fixes → KQL rule deployed
 
 ---
 
@@ -45,20 +47,20 @@ This project demonstrates a complete SOC investigation workflow from initial ale
 | Attribute | Finding |
 |-----------|--------|
 | IP Address | 185.220.101.34 |
-| Subnet | 185.220.101.0/24 — entire range is Tor exit infrastructure |
+| Subnet | 185.220.101.0/24 - entire range is Tor exit infrastructure |
 | Hostname | tor-exit-34.for-privacy.net |
-| ASN | AS60729 — Stiftung Erneuerbare Freiheit |
+| ASN | AS60729 - Stiftung Erneuerbare Freiheit |
 | Location | Berlin, Germany |
 | Reputation | 16/94 vendors flagged · Community score -25 · 41 reports |
 | Open Ports | 80/Tor-httpd · 10034/UNKNOWN · 10134/UNKNOWN |
-| Infrastructure Age | Active since 2025-07-09 — 8+ months |
-| Verdict | **CONFIRMED MALICIOUS** — Multi-tool consensus |
+| Infrastructure Age | Active since 2025-07-09 - 8+ months |
+| Verdict | **CONFIRMED MALICIOUS** - Multi-tool consensus |
 
 ---
 
 ## Detection Rules (KQL)
 
-### SOC-TOR-EXFIL-001 — Outbound Tor with Volume Threshold
+### SOC-TOR-EXFIL-001 - Outbound Tor with Volume Threshold
 
 ```kql
 let TorExitNodes = externaldata(IPAddress:string)
