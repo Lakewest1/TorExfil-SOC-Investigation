@@ -1,0 +1,31 @@
+// SOC-TOR-EXFIL-001 | Tor-Based Exfiltration Detection
+// Author: Musa Olalekan | Sir Lakewest Cybersecurity Academy
+// Platform: Microsoft Sentinel
+// Threshold: 1MB outbound to Tor exit nodes
+// Severity: Critical >10MB after hours | High >1MB after hours | Medium >1MB
+
+let TorExitNodes = externaldata(IPAddress:string)
+    [@"https://check.torproject.org/torbulkexitlist"]
+    with(format='txt', ignoreFirstRecord=true);
+let DataThresholdBytes = 1048576; // 1 MB
+
+CommonSecurityLog
+| where TimeGenerated > ago(24h)
+| where DestinationIP in (TorExitNodes)
+| extend Hour = datetime_part('hour', TimeGenerated)
+| extend BusinessHoursFlag = iif(Hour between (8 .. 18),
+    'BUSINESS HOURS', 'AFTER HOURS')
+| extend DataTransferBytes = SentBytes + ReceivedBytes
+| extend DataTransferMB = round(todouble(DataTransferBytes) / 1048576, 2)
+| extend Severity = case(
+    DataTransferBytes > DataThresholdBytes * 10
+        and BusinessHoursFlag == 'AFTER HOURS', 'CRITICAL',
+    DataTransferBytes > DataThresholdBytes
+        and BusinessHoursFlag == 'AFTER HOURS', 'HIGH',
+    DataTransferBytes > DataThresholdBytes, 'MEDIUM',
+    'LOW')
+| where DataTransferMB > 1
+| project TimeGenerated, SourceHost=DeviceName, SourceIP,
+    DestinationIP, DestinationPort, DataTransferMB,
+    BusinessHoursFlag, Severity
+| order by DataTransferMB desc, TimeGenerated desc

@@ -1,0 +1,16 @@
+// SOC-TOR-EXFIL-003 | Endpoint Detection
+// Requires: Advanced Audit Policy > Filtering Platform Connection
+
+SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID == 5156
+| where DestinationIp startswith '185.220.101.'
+    or DestinationPort in (9001, 9030, 9050, 9150)
+| summarize
+    ConnectionCount = count(),
+    Applications = make_set(ProcessName),
+    FirstSeen = min(TimeGenerated),
+    LastSeen = max(TimeGenerated)
+    by Computer, Account, DestinationIp, DestinationPort
+| extend DurationMinutes = datetime_diff('minute', LastSeen, FirstSeen)
+| order by ConnectionCount desc

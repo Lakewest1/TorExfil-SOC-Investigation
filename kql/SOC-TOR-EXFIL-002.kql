@@ -1,0 +1,14 @@
+// SOC-TOR-EXFIL-002 | Subnet Sweep Detection
+// Detects any host communicating with the full /24 Tor subnet
+
+CommonSecurityLog
+| where TimeGenerated > ago(7d)
+| where DestinationIP startswith '185.220.101.'
+| summarize
+    TotalConnections = count(),
+    TotalMBSent = round(sum(todouble(SentBytes)) / 1048576, 2),
+    UniqueDestIPs = dcount(DestinationIP),
+    AffectedHosts = make_set(DeviceName)
+    by SourceIP, bin(TimeGenerated, 1h)
+| where TotalMBSent > 1
+| order by TotalMBSent desc
